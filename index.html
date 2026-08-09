@@ -1,99 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Agendamento</title>
+    <title>MILA Bronzeamento - Agendamento</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="container">
+    <header class="topo">
 
-        <h1>Agende seu horário</h1>
+        <div class="logo">
+            MILA
+            <span>Bronzeamento</span>
+        </div>
 
-        <p class="subtitulo">
-            Escolha o serviço, a data e o horário.
-        </p>
+    </header>
+
+
+    <main class="container">
 
         <div class="card">
 
-            <label>Escolha o serviço</label>
+            <h1>Agende seu horário</h1>
+
+            <p class="subtitulo">
+                Escolha o serviço, a data e o horário
+            </p>
+
+
+            <label>1. Escolha o serviço</label>
 
             <select id="servico">
 
-                <option value="">
-                    Selecione um serviço
-                </option>
-
-                <option value="Corte de cabelo">
-                    Corte de cabelo
-                </option>
-
-                <option value="Barba">
-                    Barba
-                </option>
-
-                <option value="Corte + Barba">
-                    Corte + Barba
+                <option value="Bronzeamento">
+                    Bronzeamento
                 </option>
 
             </select>
 
 
-            <label>Escolha a data</label>
+            <label>2. Escolha a data</label>
 
             <input
                 type="date"
                 id="data"
+                onchange="carregarHorarios()"
             >
 
 
-            <label>Escolha o horário</label>
+            <label>3. Escolha o horário</label>
 
-            <select id="horario">
+            <select
+                id="horario"
+                disabled
+            >
 
                 <option value="">
-                    Selecione um horário
-                </option>
-
-                <option value="08:00">
-                    08:00
-                </option>
-
-                <option value="09:00">
-                    09:00
-                </option>
-
-                <option value="10:00">
-                    10:00
-                </option>
-
-                <option value="11:00">
-                    11:00
-                </option>
-
-                <option value="13:00">
-                    13:00
-                </option>
-
-                <option value="14:00">
-                    14:00
-                </option>
-
-                <option value="15:00">
-                    15:00
-                </option>
-
-                <option value="16:00">
-                    16:00
-                </option>
-
-                <option value="17:00">
-                    17:00
+                    Selecione primeiro a data
                 </option>
 
             </select>
@@ -103,11 +71,23 @@
                 Continuar
             </button>
 
+
+            <div class="seguranca">
+                🔒 Seus dados estão seguros conosco.
+            </div>
+
         </div>
 
-    </div>
+    </main>
+
+
+    <footer>
+        © 2026 Mila Bronzeamento. Todos os direitos reservados.
+    </footer>
+
 
     <script src="script.js"></script>
 
 </body>
+
 </html>
