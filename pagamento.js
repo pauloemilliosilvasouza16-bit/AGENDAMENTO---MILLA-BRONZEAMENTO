@@ -1,78 +1,33 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+const servico = localStorage.getItem("servico");
+const data = localStorage.getItem("data");
+const horario = localStorage.getItem("horario");
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+document.getElementById("resumoServico").textContent =
+    "Serviço: " + servico;
 
-    <title>Pagamento</title>
+document.getElementById("resumoData").textContent =
+    "Data: " + data;
 
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-    <div class="container">
-
-        <h1>Pagamento</h1>
-
-        <p class="subtitulo">
-            Escolha como deseja pagar.
-        </p>
-
-        <div class="card">
-
-            <h2 id="resumoServico"></h2>
-
-            <p id="resumoData"></p>
-
-            <p id="resumoHorario"></p>
+document.getElementById("resumoHorario").textContent =
+    "Horário: " + horario;
 
 
-            <label>Forma de pagamento</label>
+function finalizarPagamento() {
 
-            <select id="tipoPagamento">
+    const tipoPagamento =
+        document.getElementById("tipoPagamento").value;
 
-                <option value="">
-                    Selecione
-                </option>
+    if (!tipoPagamento) {
 
-                <option value="integral">
-                    Pagar valor integral
-                </option>
+        alert("Escolha uma forma de pagamento.");
 
-                <option value="sinal">
-                    Pagar somente o sinal
-                </option>
+        return;
+    }
 
-            </select>
+    localStorage.setItem(
+        "tipoPagamento",
+        tipoPagamento
+    );
 
-
-            <div id="valores" style="margin-top: 20px;">
-
-                <p>
-                    Valor do serviço:
-                    <strong>R$ 100,00</strong>
-                </p>
-
-                <p>
-                    Sinal:
-                    <strong>R$ 30,00</strong>
-                </p>
-
-            </div>
-
-
-            <button onclick="finalizarPagamento()">
-                Continuar
-            </button>
-
-        </div>
-
-    </div>
-
-    <script src="pagamento.js"></script>
-
-</body>
-
-</html>
+    window.location.href = "confirmacao.html";
+}
