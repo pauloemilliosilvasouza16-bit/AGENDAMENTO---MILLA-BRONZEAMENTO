@@ -1,33 +1,104 @@
-const servico = localStorage.getItem("servico");
-const data = localStorage.getItem("data");
-const horario = localStorage.getItem("horario");
+export async function onRequestPost(context) {
+    try {
+        const dados = await context.request.json();
 
-document.getElementById("resumoServico").textContent =
-    "Serviço: " + servico;
+        const {
+            nome,
+            telefone,
+            email,
+            servico,
+            data,
+            horario,
+            pagamento
+        } = dados;
 
-document.getElementById("resumoData").textContent =
-    "Data: " + data;
+        if (!nome || !telefone || !email || !servico || !data || !horario || !pagamento) {
+            return new Response(
+                JSON.stringify({
+                    sucesso: false,
+                    mensagem: "Dados incompletos."
+                }),
+                {
+                    status: 400,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
 
-document.getElementById("resumoHorario").textContent =
-    "Horário: " + horario;
+        const vagasMaximas = 5;
 
+        const resultado = await context.env.DB
+            .prepare(`
+                SELECT COUNT(*) AS total
+                FROM agendamentos
+                WHERE data = ? AND horario = ?
+            `)
+            .bind(data, horario)
+            .first();
 
-function finalizarPagamento() {
+        const totalAgendados = resultado?.total || 0;
 
-    const tipoPagamento =
-        document.getElementById("tipoPagamento").value;
+        if (totalAgendados >= vagasMaximas) {
+            return new Response(
+                JSON.stringify({
+                    sucesso: false,
+                    mensagem: "Este horário já está lotado."
+                }),
+                {
+                    status: 409,
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+        }
 
-    if (!tipoPagamento) {
+        await context.env.DB
+            .prepare(`
+                INSERT INTO agendamentos
+                (nome, telefone, email, servico, data, horario, pagamento, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `)
+            .bind(
+                nome,
+                telefone,
+                email,
+                servico,
+                data,
+                horario,
+                pagamento,
+                "confirmado"
+            )
+            .run();
 
-        alert("Escolha uma forma de pagamento.");
+        return new Response(
+            JSON.stringify({
+                sucesso: true,
+                mensagem: "Agendamento confirmado!"
+            }),
+            {
+                status: 200,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
 
-        return;
+    } catch (erro) {
+        return new Response(
+            JSON.stringify({
+                sucesso: false,
+                mensagem: "Erro ao salvar o agendamento.",
+                erro: erro.message
+            }),
+            {
+                status: 500,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
     }
-
-    localStorage.setItem(
-        "tipoPagamento",
-        tipoPagamento
-    );
-
-    window.location.href = "confirmacao.html";
 }
