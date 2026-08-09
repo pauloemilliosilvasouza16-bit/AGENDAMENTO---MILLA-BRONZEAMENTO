@@ -10,75 +10,102 @@ const horarios = [
     "17:00"
 ];
 
-
-function carregarHorarios() {
+async function carregarHorarios() {
 
     const data = document.getElementById("data");
     const horario = document.getElementById("horario");
 
+    if (!data || !horario) return;
+
     if (!data.value) {
         horario.disabled = true;
-        return;
-    }
-
-    horario.disabled = false;
-
-    horario.innerHTML = "";
-
-    const opcaoInicial = document.createElement("option");
-
-    opcaoInicial.value = "";
-    opcaoInicial.textContent = "Selecione um horário";
-
-    horario.appendChild(opcaoInicial);
-
-
-    horarios.forEach(function(hora) {
+        horario.innerHTML = "";
 
         const opcao = document.createElement("option");
-
-        opcao.value = hora;
-        opcao.textContent = hora;
-
+        opcao.value = "";
+        opcao.textContent = "Selecione primeiro a data";
         horario.appendChild(opcao);
 
-    });
-
-}
-
-
-function continuar() {
-
-    const servico =
-        document.getElementById("servico").value;
-
-    const data =
-        document.getElementById("data").value;
-
-    const horario =
-        document.getElementById("horario").value;
-
-
-    if (!data) {
-
-        alert("Escolha uma data.");
-
         return;
     }
 
+    horario.disabled = true;
+    horario.innerHTML = "";
 
-    if (!horario) {
+    const carregando = document.createElement("option");
+    carregando.value = "";
+    carregando.textContent = "Carregando horários...";
+    horario.appendChild(carregando);
 
-        alert("Escolha um horário.");
+    try {
 
-        return;
+        const resposta = await fetch(
+            `/api/horarios?data=${encodeURIComponent(data.value)}`
+        );
+
+        if (!resposta.ok) {
+            throw new Error("Erro ao consultar horários");
+        }
+
+        const resultado = await resposta.json();
+
+        horario.innerHTML = "";
+
+        const inicial = document.createElement("option");
+        inicial.value = "";
+        inicial.textContent = "Selecione um horário";
+        horario.appendChild(inicial);
+
+        resultado.forEach(item => {
+
+            const opcao = document.createElement("option");
+
+            opcao.value = item.horario;
+
+            if (item.vagas > 0) {
+
+                opcao.textContent =
+                    `${item.horario} — ${item.vagas} ${item.vagas === 1 ? "vaga" : "vagas"}`;
+
+                opcao.disabled = false;
+
+            } else {
+
+                opcao.textContent =
+                    `${item.horario} — LOTADO`;
+
+                opcao.disabled = true;
+            }
+
+            horario.appendChild(opcao);
+        });
+
+        horario.disabled = false;
+
+    } catch (erro) {
+
+        console.error("Erro ao carregar horários:", erro);
+
+        horario.innerHTML = "";
+
+        const erroOpcao = document.createElement("option");
+        erroOpcao.value = "";
+        erroOpcao.textContent = "Erro ao carregar horários";
+        horario.appendChild(erroOpcao);
+
+        horario.disabled = true;
+    }
+}
+
+
+// Quando a página carregar
+document.addEventListener("DOMContentLoaded", function () {
+
+    const data = document.getElementById("data");
+
+    if (data) {
+        data.addEventListener("change", carregarHorarios);
     }
 
-
-    localStorage.setItem("servico", servico);
-    localStorage.setItem("data", data);
-    localStorage.setItem("horario", horario);
-
-
-    window.location.href = "cliente.html";
-}
+    carregarHorarios();
+});
