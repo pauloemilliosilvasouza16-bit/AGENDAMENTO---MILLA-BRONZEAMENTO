@@ -1,33 +1,30 @@
+const nome = localStorage.getItem("nome");
 const servico = localStorage.getItem("servico");
 const data = localStorage.getItem("data");
 const horario = localStorage.getItem("horario");
+const tipoPagamento = localStorage.getItem("tipoPagamento");
 
-document.getElementById("resumoServico").textContent =
+
+document.getElementById("cliente").textContent =
+    "Cliente: " + nome;
+
+document.getElementById("servico").textContent =
     "Serviço: " + servico;
 
-document.getElementById("resumoData").textContent =
+document.getElementById("data").textContent =
     "Data: " + data;
 
-document.getElementById("resumoHorario").textContent =
+document.getElementById("horario").textContent =
     "Horário: " + horario;
 
 
-function finalizarPagamento() {
+if (tipoPagamento === "integral") {
 
-    const tipoPagamento =
-        document.getElementById("tipoPagamento").value;
+    document.getElementById("pagamento").textContent =
+        "Pagamento: Valor integral";
 
-    if (!tipoPagamento) {
+} else {
 
-        alert("Escolha uma forma de pagamento.");
-
-        return;
-    }
-
-    localStorage.setItem(
-        "tipoPagamento",
-        tipoPagamento
-    );
-
-    window.location.href = "confirmacao.html";
+    document.getElementById("pagamento").textContent =
+        "Pagamento: Sinal";
 }
