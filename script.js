@@ -109,3 +109,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     carregarHorarios();
 });
+window.continuar = function() {
+
+    const data = document.getElementById("data").value;
+    const horario = document.getElementById("horario").value;
+
+    if (!data) {
+        alert("Escolha uma data.");
+        return;
+    }
+
+    if (!horario) {
+        alert("Escolha um horário.");
+        return;
+    }
+
+    localStorage.setItem("data", data);
+    localStorage.setItem("horario", horario);
+    localStorage.setItem("servico", "Bronzeamento");
+
+    window.location.href = "cliente.html";
+};
