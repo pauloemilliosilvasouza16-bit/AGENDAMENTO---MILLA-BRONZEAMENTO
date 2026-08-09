@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dados do cliente</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Seus dados</h1>
+
+        <p class="subtitulo">
+            Informe seus dados para confirmar o agendamento.
+        </p>
+
+        <div class="card">
+
+            <label>Nome completo</label>
+
+            <input
+                type="text"
+                id="nome"
+                placeholder="Digite seu nome"
+            >
+
+
+            <label>Telefone</label>
+
+            <input
+                type="tel"
+                id="telefone"
+                placeholder="(00) 00000-0000"
+            >
+
+
+            <label>E-mail</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="seuemail@email.com"
+            >
+
+
+            <button onclick="continuarCliente()">
+                Continuar
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="cliente.js"></script>
+
+</body>
+
+</html>
