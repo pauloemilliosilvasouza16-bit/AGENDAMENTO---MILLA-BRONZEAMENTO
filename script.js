@@ -11,9 +11,9 @@ function continuar() {
         return;
     }
 
-    alert(
-        "Serviço: " + servico +
-        "\nData: " + data +
-        "\nHorário: " + horario
-    );
+    localStorage.setItem("servico", servico);
+    localStorage.setItem("data", data);
+    localStorage.setItem("horario", horario);
+
+    window.location.href = "cliente.html";
 }
