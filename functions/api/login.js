@@ -1,3 +1,105 @@
+function base64UrlDecode(str) {
+    str = str.replace(/-/g, "+").replace(/_/g, "/");
+
+    while (str.length % 4) {
+        str += "=";
+    }
+
+    const binary = atob(str);
+
+    const bytes = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+
+    return bytes;
+}
+
+
+function pegarCookie(request, nome) {
+
+    const cookies = request.headers.get("Cookie") || "";
+
+    const partes = cookies.split(";");
+
+    for (const parte of partes) {
+
+        const [chave, ...valor] = parte.trim().split("=");
+
+        if (chave === nome) {
+            return valor.join("=");
+        }
+    }
+
+    return null;
+}
+
+
+async function validarSessao(request, secret) {
+
+    const cookie = pegarCookie(
+        request,
+        "milla_admin_session"
+    );
+
+    if (!cookie) {
+        return false;
+    }
+
+    const partes = cookie.split(".");
+
+    if (partes.length !== 2) {
+        return false;
+    }
+
+    const payload = partes[0];
+    const assinaturaRecebida = partes[1];
+
+    const dados = payload.split(".");
+
+    if (dados.length !== 2) {
+        return false;
+    }
+
+    const usuario = dados[0];
+    const expiracao = Number(dados[1]);
+
+    if (!usuario || !expiracao) {
+        return false;
+    }
+
+    if (Math.floor(Date.now() / 1000) > expiracao) {
+        return false;
+    }
+
+    const encoder = new TextEncoder();
+
+    const chave = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(secret),
+        {
+            name: "HMAC",
+            hash: "SHA-256"
+        },
+        false,
+        ["verify"]
+    );
+
+    try {
+
+        return await crypto.subtle.verify(
+            "HMAC",
+            chave,
+            base64UrlDecode(assinaturaRecebida),
+            encoder.encode(payload)
+        );
+
+    } catch (erro) {
+
+        return false;
+    }
+}
 function base64urlEncode(bytes) {
 
     let binary = "";
