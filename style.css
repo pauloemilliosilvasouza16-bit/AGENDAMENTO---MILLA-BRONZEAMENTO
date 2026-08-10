@@ -4,163 +4,445 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #f7f0eb;
-    color: #2d211b;
+    background: #fff9f7;
+    color: #3b2929;
 }
+
+/* =========================
+   TOPO
+========================= */
 
 .topo {
     width: 100%;
-    background: #321f15;
-    padding: 30px 20px;
-    text-align: center;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid #f1dddd;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo {
-    color: #d8b06a;
-    font-size: 44px;
+    color: #9d5b62;
+    font-size: 30px;
     font-weight: bold;
     letter-spacing: 5px;
 }
 
 .logo span {
     display: block;
-    margin-top: 3px;
-    font-size: 30px;
+    font-size: 13px;
+    letter-spacing: 2px;
     font-weight: normal;
-    letter-spacing: 1px;
+    margin-top: 3px;
 }
+
+.menu-agendar {
+    text-decoration: none;
+    color: white;
+    background: #9d5b62;
+    padding: 12px 22px;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.menu-agendar:hover {
+    background: #7f444b;
+    transform: translateY(-2px);
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    padding: 70px 8%;
+    position: relative;
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle at 85% 25%, #f4c9b8 0, #f8ded4 22%, transparent 45%),
+        linear-gradient(135deg, #fff8f5, #f9e5df);
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    right: -100px;
+    bottom: -150px;
+}
+
+.hero-conteudo {
+    max-width: 650px;
+    position: relative;
+    z-index: 2;
+}
+
+.tag {
+    display: inline-block;
+    background: #fff;
+    color: #9d5b62;
+    padding: 9px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 22px;
+}
+
+.hero h1 {
+    font-size: 58px;
+    line-height: 1.05;
+    color: #3c2929;
+    margin-bottom: 22px;
+}
+
+.hero h1 strong {
+    color: #9d5b62;
+    display: block;
+}
+
+.hero p {
+    font-size: 19px;
+    line-height: 1.7;
+    color: #695555;
+    max-width: 570px;
+    margin-bottom: 32px;
+}
+
+.botao-hero {
+    display: inline-block;
+    background: #9d5b62;
+    color: white;
+    text-decoration: none;
+    padding: 16px 30px;
+    border-radius: 30px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    box-shadow: 0 10px 25px rgba(157, 91, 98, 0.25);
+    transition: 0.3s;
+}
+
+.botao-hero:hover {
+    background: #7f444b;
+    transform: translateY(-3px);
+}
+
+/* =========================
+   SOBRE
+========================= */
+
+.sobre {
+    padding: 85px 8%;
+    background: white;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.sobre-texto {
+    max-width: 500px;
+}
+
+.mini-titulo {
+    color: #b57978;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.sobre h2 {
+    font-size: 42px;
+    line-height: 1.15;
+    margin: 15px 0 20px;
+}
+
+.sobre h2 span {
+    color: #9d5b62;
+}
+
+.sobre p {
+    color: #776565;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* =========================
+   BENEFÍCIOS
+========================= */
+
+.beneficios {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.beneficio {
+    padding: 28px 20px;
+    border-radius: 18px;
+    background: #fff8f5;
+    border: 1px solid #f3dfda;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.beneficio:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(100, 50, 50, 0.08);
+}
+
+.icone {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.beneficio h3 {
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.beneficio p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #806f6f;
+}
+
+/* =========================
+   AGENDAMENTO
+========================= */
 
 .container {
     width: 100%;
-    max-width: 760px;
-    margin: 45px auto;
-    padding: 0 20px;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 80px 20px;
 }
 
 .card {
-    width: 100%;
-    background: #ffffff;
+    background: white;
     padding: 50px;
-    border-radius: 20px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.10);
+    border-radius: 25px;
+    box-shadow: 0 15px 50px rgba(80, 40, 40, 0.10);
+    border: 1px solid #f2e1dd;
 }
 
-h1 {
+.cabecalho-agendamento {
     text-align: center;
-    font-size: 42px;
-    margin-bottom: 12px;
-    color: #241811;
-}
-
-.subtitulo {
-    text-align: center;
-    color: #777;
-    font-size: 20px;
     margin-bottom: 40px;
 }
 
-label {
-    display: block;
-    font-size: 18px;
+.cabecalho-agendamento span {
+    color: #b57978;
+    font-size: 13px;
     font-weight: bold;
-    margin-top: 25px;
-    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.cabecalho-agendamento h2 {
+    font-size: 38px;
+    margin: 12px 0;
+    color: #3b2929;
+}
+
+.cabecalho-agendamento p {
+    color: #807070;
+    font-size: 17px;
+}
+
+.campo {
+    margin-bottom: 25px;
+}
+
+.campo label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 9px;
+    color: #4a3535;
 }
 
 select,
 input {
     width: 100%;
-    height: 58px;
-    padding: 0 18px;
-    border: 1px solid #d8d0cb;
-    border-radius: 10px;
-    font-size: 17px;
-    background: #ffffff;
-    color: #333;
+    height: 56px;
+    padding: 0 17px;
+    border: 1px solid #decaca;
+    border-radius: 12px;
+    background: white;
+    color: #403333;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s;
+}
+
+select:focus,
+input:focus {
+    border-color: #9d5b62;
+    box-shadow: 0 0 0 3px rgba(157, 91, 98, 0.10);
 }
 
 select:disabled {
-    background: #f3f3f3;
+    background: #f5f1f0;
     color: #999;
 }
 
-button {
+/* =========================
+   BOTÃO
+========================= */
+
+.botao-continuar {
     width: 100%;
-    height: 60px;
-    margin-top: 35px;
+    height: 58px;
+    margin-top: 10px;
     border: none;
-    border-radius: 10px;
-    background: #43291d;
+    border-radius: 30px;
+    background: #9d5b62;
     color: white;
-    font-size: 19px;
+    font-size: 17px;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-button:hover {
-    background: #5a3827;
+.botao-continuar span {
+    margin-left: 8px;
+    font-size: 20px;
 }
+
+.botao-continuar:hover {
+    background: #7f444b;
+    transform: translateY(-2px);
+}
+
+/* =========================
+   SEGURANÇA
+========================= */
 
 .seguranca {
     text-align: center;
-    margin-top: 30px;
-    color: #777;
-    font-size: 16px;
+    margin-top: 22px;
+    color: #8b7979;
+    font-size: 14px;
 }
+
+/* =========================
+   RODAPÉ
+========================= */
 
 footer {
-    width: 100%;
+    background: #392829;
+    color: white;
     text-align: center;
-    padding: 40px 20px;
-    background: #f1e5dc;
-    color: #555;
-    font-size: 16px;
+    padding: 55px 20px;
 }
 
-@media (max-width: 600px) {
+.footer-logo {
+    color: #e8b9b5;
+    font-size: 30px;
+    font-weight: bold;
+    letter-spacing: 5px;
+}
+
+.footer-logo span {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: normal;
+    margin-top: 4px;
+}
+
+footer p {
+    color: #d8c6c6;
+    margin: 18px 0;
+}
+
+.redes {
+    color: #e8b9b5;
+    margin-bottom: 30px;
+}
+
+footer small {
+    color: #a99595;
+}
+
+/* =========================
+   CELULAR
+========================= */
+
+@media (max-width: 800px) {
 
     .topo {
-        padding: 25px 15px;
+        padding: 15px 5%;
     }
 
     .logo {
-        font-size: 34px;
+        font-size: 25px;
     }
 
-    .logo span {
-        font-size: 23px;
+    .menu-agendar {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    .hero {
+        min-height: 520px;
+        padding: 60px 7%;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .hero p {
+        font-size: 17px;
+    }
+
+    .sobre {
+        grid-template-columns: 1fr;
+        padding: 65px 7%;
+        gap: 35px;
+    }
+
+    .sobre h2 {
+        font-size: 35px;
+    }
+
+    .beneficios {
+        grid-template-columns: 1fr;
     }
 
     .container {
-        margin: 25px auto;
-        padding: 0 15px;
+        padding: 60px 15px;
     }
 
     .card {
         padding: 30px 20px;
+        border-radius: 20px;
     }
 
-    h1 {
+    .cabecalho-agendamento h2 {
         font-size: 30px;
     }
 
-    .subtitulo {
-        font-size: 17px;
-        margin-bottom: 30px;
-    }
-
-    label {
-        font-size: 16px;
-    }
-
-    select,
-    input {
-        height: 55px;
-    }
-
-    button {
-        height: 58px;
+    .campo label {
+        font-size: 15px;
     }
 }
