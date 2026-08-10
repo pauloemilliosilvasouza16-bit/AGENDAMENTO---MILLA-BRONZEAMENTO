@@ -158,18 +158,22 @@
 
                 try {
 
-                    const resposta = await fetch("/api/login", {
-                        method: "POST",
+                    const resposta = await fetch("/api/admin");
 
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+if (resposta.status === 401) {
+    window.location.href = "/login.html";
+    return;
+}
 
-                        body: JSON.stringify({
-                            usuario,
-                            senha
-                        })
-                    });
+const resultado = await resposta.json();
+
+if (!resposta.ok || !resultado.sucesso) {
+
+    throw new Error(
+        resultado.mensagem || "Erro ao carregar agendamentos."
+    );
+
+}
 
                     const resultado =
                         await resposta.json();
