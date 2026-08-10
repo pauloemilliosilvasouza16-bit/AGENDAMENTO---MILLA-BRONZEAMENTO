@@ -1,104 +1,76 @@
-export async function onRequestPost(context) {
+const servico = localStorage.getItem("servico");
+const data = localStorage.getItem("data");
+const horario = localStorage.getItem("horario");
+
+document.getElementById("resumoServico").textContent =
+    "Serviço: " + servico;
+
+document.getElementById("resumoData").textContent =
+    "Data: " + data;
+
+document.getElementById("resumoHorario").textContent =
+    "Horário: " + horario;
+
+async function finalizarPagamento() {
+
+    const tipoPagamento =
+        document.getElementById("tipoPagamento").value;
+
+    if (!tipoPagamento) {
+        alert("Escolha uma forma de pagamento.");
+        return;
+    }
+
+    const nome = localStorage.getItem("nome");
+    const telefone = localStorage.getItem("telefone");
+    const email = localStorage.getItem("email");
+
+    if (!nome || !telefone || !email) {
+        alert("Os dados do cliente não foram encontrados.");
+        return;
+    }
+
+    const dados = {
+        nome: nome,
+        telefone: telefone,
+        email: email,
+        servico: servico,
+        data: data,
+        horario: horario,
+        pagamento: tipoPagamento
+    };
+
     try {
-        const dados = await context.request.json();
 
-        const {
-            nome,
-            telefone,
-            email,
-            servico,
-            data,
-            horario,
-            pagamento
-        } = dados;
+        const resposta = await fetch("/api/agendamento", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        });
 
-        if (!nome || !telefone || !email || !servico || !data || !horario || !pagamento) {
-            return new Response(
-                JSON.stringify({
-                    sucesso: false,
-                    mensagem: "Dados incompletos."
-                }),
-                {
-                    status: 400,
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }
+        const resultado = await resposta.json();
+
+        if (!resposta.ok) {
+            alert(
+                resultado.mensagem ||
+                "Não foi possível realizar o agendamento."
             );
+            return;
         }
 
-        const vagasMaximas = 5;
-
-        const resultado = await context.env.DB
-            .prepare(`
-                SELECT COUNT(*) AS total
-                FROM agendamentos
-                WHERE data = ? AND horario = ?
-            `)
-            .bind(data, horario)
-            .first();
-
-        const totalAgendados = resultado?.total || 0;
-
-        if (totalAgendados >= vagasMaximas) {
-            return new Response(
-                JSON.stringify({
-                    sucesso: false,
-                    mensagem: "Este horário já está lotado."
-                }),
-                {
-                    status: 409,
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }
-            );
-        }
-
-        await context.env.DB
-            .prepare(`
-                INSERT INTO agendamentos
-                (nome, telefone, email, servico, data, horario, pagamento, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            `)
-            .bind(
-                nome,
-                telefone,
-                email,
-                servico,
-                data,
-                horario,
-                pagamento,
-                "confirmado"
-            )
-            .run();
-
-        return new Response(
-            JSON.stringify({
-                sucesso: true,
-                mensagem: "Agendamento confirmado!"
-            }),
-            {
-                status: 200,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }
+        localStorage.setItem(
+            "tipoPagamento",
+            tipoPagamento
         );
+
+        window.location.href = "confirmacao.html";
 
     } catch (erro) {
-        return new Response(
-            JSON.stringify({
-                sucesso: false,
-                mensagem: "Erro ao salvar o agendamento.",
-                erro: erro.message
-            }),
-            {
-                status: 500,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }
-        );
+
+        console.error(erro);
+
+        alert("Erro de conexão. Tente novamente.");
     }
 }
