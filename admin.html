@@ -240,7 +240,13 @@
                                     ${agendamento.horario || "-"}
                                 </span>
                             </div>
-
+<div class="acoes-agendamento">
+    <button
+        class="btn-cancelar"
+        onclick="cancelarAgendamento(${agendamento.id})">
+        Cancelar agendamento
+    </button>
+</div>
 
                             <div class="dado">
                                 <strong>SERVIÇO</strong>
