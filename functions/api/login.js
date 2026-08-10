@@ -47,23 +47,29 @@ async function validarSessao(request, secret) {
         return false;
     }
 
-    const partes = cookie.split(".");
+    const ultimoPonto = cookie.lastIndexOf(".");
 
-    if (partes.length !== 2) {
+    if (ultimoPonto === -1) {
         return false;
     }
 
-    const payload = partes[0];
-    const assinaturaRecebida = partes[1];
+    const payload = cookie.substring(0, ultimoPonto);
+    const assinaturaRecebida = cookie.substring(ultimoPonto + 1);
 
-    const dados = payload.split(".");
-
-    if (dados.length !== 2) {
+    if (!payload || !assinaturaRecebida) {
         return false;
     }
 
-    const usuario = dados[0];
-    const expiracao = Number(dados[1]);
+    const separadorPayload = payload.lastIndexOf(".");
+
+    if (separadorPayload === -1) {
+        return false;
+    }
+
+    const usuario = payload.substring(0, separadorPayload);
+    const expiracao = Number(
+        payload.substring(separadorPayload + 1)
+    );
 
     if (!usuario || !expiracao) {
         return false;
@@ -75,18 +81,18 @@ async function validarSessao(request, secret) {
 
     const encoder = new TextEncoder();
 
-    const chave = await crypto.subtle.importKey(
-        "raw",
-        encoder.encode(secret),
-        {
-            name: "HMAC",
-            hash: "SHA-256"
-        },
-        false,
-        ["verify"]
-    );
-
     try {
+
+        const chave = await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(secret),
+            {
+                name: "HMAC",
+                hash: "SHA-256"
+            },
+            false,
+            ["verify"]
+        );
 
         return await crypto.subtle.verify(
             "HMAC",
