@@ -176,21 +176,7 @@ export async function onRequestPost(context) {
                     status: 401
                 }
             );
-        }        if (
-            usuario !== context.env.ADMIN_USER ||
-            senha !== context.env.ADMIN_PASSWORD
-        ) {
-
-            return Response.json(
-                {
-                    sucesso: false,
-                    mensagem: "Usuário ou senha incorretos."
-                },
-                {
-                    status: 401
-                }
-            );
-        }
+        }     
 
         const agora =
             Math.floor(Date.now() / 1000);
