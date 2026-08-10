@@ -8,11 +8,102 @@
     <title>MILLA Bronzeamento - Painel</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .lista-admin {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .agendamento-admin {
+            background: #fff;
+            border: 1px solid #f2e1dd;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(80, 40, 40, 0.08);
+        }
+
+        .agendamento-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .agendamento-topo h3 {
+            margin: 0;
+            color: #3b2929;
+            font-size: 21px;
+        }
+
+        .status {
+            background: #e8f7ec;
+            color: #287a3d;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .dados-agendamento {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .dado {
+            background: #fff9f7;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .dado strong {
+            display: block;
+            color: #9d5b62;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .dado span {
+            color: #403333;
+            font-size: 15px;
+        }
+
+        .carregando {
+            text-align: center;
+            padding: 30px;
+            color: #806f6f;
+        }
+
+        .erro-admin {
+            text-align: center;
+            padding: 25px;
+            color: #a33;
+            background: #fff1f1;
+            border-radius: 15px;
+        }
+
+        @media (max-width: 700px) {
+
+            .dados-agendamento {
+                grid-template-columns: 1fr;
+            }
+
+            .agendamento-topo {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
     <header class="topo">
+
         <div class="logo">
             MILLA
             <span>Bronzeamento</span>
@@ -21,13 +112,16 @@
         <div>
             Painel Administrativo
         </div>
+
     </header>
+
 
     <main class="container">
 
         <div class="card">
 
             <div class="cabecalho-agendamento">
+
                 <span>ADMINISTRAÇÃO</span>
 
                 <h2>Agendamentos</h2>
@@ -35,17 +129,25 @@
                 <p>
                     Visualize os agendamentos realizados pelos clientes.
                 </p>
+
             </div>
 
-            <div id="listaAgendamentos">
-                Carregando agendamentos...
+
+            <div id="listaAgendamentos" class="lista-admin">
+
+                <div class="carregando">
+                    Carregando agendamentos...
+                </div>
+
             </div>
 
         </div>
 
     </main>
 
+
     <footer>
+
         <div class="footer-logo">
             MILLA
             <span>Bronzeamento</span>
@@ -53,8 +155,152 @@
 
         <p>Painel administrativo</p>
 
-        <small>© 2026 Milla Bronzeamento</small>
+        <small>
+            © 2026 Milla Bronzeamento
+        </small>
+
     </footer>
+
+
+    <script>
+
+        async function carregarAgendamentos() {
+
+            const lista = document.getElementById("listaAgendamentos");
+
+            try {
+
+                const resposta = await fetch("/api/admin");
+
+                const resultado = await resposta.json();
+
+
+                if (!resposta.ok || !resultado.sucesso) {
+
+                    throw new Error(
+                        resultado.mensagem || "Erro ao carregar agendamentos."
+                    );
+
+                }
+
+
+                const agendamentos = resultado.agendamentos;
+
+
+                if (!agendamentos || agendamentos.length === 0) {
+
+                    lista.innerHTML = `
+                        <div class="carregando">
+                            Nenhum agendamento encontrado.
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                lista.innerHTML = "";
+
+
+                agendamentos.forEach(function (agendamento) {
+
+                    const card = document.createElement("div");
+
+                    card.className = "agendamento-admin";
+
+
+                    card.innerHTML = `
+
+                        <div class="agendamento-topo">
+
+                            <h3>
+                                ${agendamento.nome || "Cliente"}
+                            </h3>
+
+                            <span class="status">
+                                ${agendamento.status || "Pendente"}
+                            </span>
+
+                        </div>
+
+
+                        <div class="dados-agendamento">
+
+                            <div class="dado">
+                                <strong>DATA</strong>
+                                <span>
+                                    ${agendamento.data || "-"}
+                                </span>
+                            </div>
+
+
+                            <div class="dado">
+                                <strong>HORÁRIO</strong>
+                                <span>
+                                    ${agendamento.horario || "-"}
+                                </span>
+                            </div>
+
+
+                            <div class="dado">
+                                <strong>SERVIÇO</strong>
+                                <span>
+                                    ${agendamento.servico || "-"}
+                                </span>
+                            </div>
+
+
+                            <div class="dado">
+                                <strong>PAGAMENTO</strong>
+                                <span>
+                                    ${agendamento.pagamento || "-"}
+                                </span>
+                            </div>
+
+
+                            <div class="dado">
+                                <strong>TELEFONE</strong>
+                                <span>
+                                    ${agendamento.telefone || "-"}
+                                </span>
+                            </div>
+
+
+                            <div class="dado">
+                                <strong>E-MAIL</strong>
+                                <span>
+                                    ${agendamento.email || "-"}
+                                </span>
+                            </div>
+
+                        </div>
+                    `;
+
+
+                    lista.appendChild(card);
+
+                });
+
+            } catch (erro) {
+
+                console.error(erro);
+
+                lista.innerHTML = `
+                    <div class="erro-admin">
+                        Não foi possível carregar os agendamentos.
+                        <br><br>
+                        Tente atualizar a página.
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        carregarAgendamentos();
+
+    </script>
 
 </body>
 
