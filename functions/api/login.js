@@ -144,23 +144,14 @@ async function criarAssinatura(valor, segredo) {
 
 
 export async function onRequestPost(context) {
-const autenticado = await validarSessao(
-        context.request,
-        context.env.ADMIN_SESSION_SECRET
-    );
+    try{
+        const dados=
+                await context.request.json()
 
-    if (!autenticado) {
-        return Response.json(
-            {
-                sucesso: false,
-                mensagem: "Não autorizado."
-            },
-            {
-                status: 401
-            }
-        );
-    }
-    const autenticado = await validarSessao(
+        const usuario = dados.usuario;
+        const senha = dados.senha;
+
+        if (!usuario || !senha) {
         context.request,
         context.env.ADMIN_SESSION_SECRET
     );
