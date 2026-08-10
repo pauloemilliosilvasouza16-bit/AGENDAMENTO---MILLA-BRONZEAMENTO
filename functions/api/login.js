@@ -144,26 +144,39 @@ async function criarAssinatura(valor, segredo) {
 
 
 export async function onRequestPost(context) {
-    try{
-        const dados=
-                await context.request.json()
+    try {
+        const dados =
+            await context.request.json();
 
         const usuario = dados.usuario;
         const senha = dados.senha;
 
         if (!usuario || !senha) {
-      return Response.json(
-        {
-            sucesso: false,
-            mensagem: "Usuário e senha são obrigatórios."
-        },
-        {
-            status: 400
+            return Response.json(
+                {
+                    sucesso: false,
+                    mensagem: "Usuário e senha são obrigatórios."
+                },
+                {
+                    status: 400
+                }
+            );
         }
-    );
-}
 
         if (
+            usuario !== context.env.ADMIN_USER ||
+            senha !== context.env.ADMIN_PASSWORD
+        ) {
+            return Response.json(
+                {
+                    sucesso: false,
+                    mensagem: "Usuário ou senha incorretos."
+                },
+                {
+                    status: 401
+                }
+            );
+        }        if (
             usuario !== context.env.ADMIN_USER ||
             senha !== context.env.ADMIN_PASSWORD
         ) {
