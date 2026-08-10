@@ -7,68 +7,166 @@
 
     <title>MILLA Bronzeamento - Agendamento</title>
 
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 
 <body>
 
     <header class="topo">
-
         <div class="logo">
             MILLA
             <span>Bronzeamento</span>
         </div>
 
+        <a href="#agendamento" class="menu-agendar">
+            Agendar
+        </a>
     </header>
 
 
-    <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+
+        <div class="hero-conteudo">
+
+            <span class="tag">
+                ☀️ BRONZEAMENTO
+            </span>
+
+            <h1>
+                Seu momento de
+                <strong>beleza e cuidado.</strong>
+            </h1>
+
+            <p>
+                Realce sua beleza e conquiste aquele bronze perfeito
+                com um atendimento pensado especialmente para você.
+            </p>
+
+            <a href="#agendamento" class="botao-hero">
+                AGENDAR MEU HORÁRIO
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- SOBRE -->
+    <section class="sobre">
+
+        <div class="sobre-texto">
+
+            <span class="mini-titulo">
+                ✨ MILLA BRONZEAMENTO
+            </span>
+
+            <h2>
+                Seu bronze,
+                <span>do seu jeito.</span>
+            </h2>
+
+            <p>
+                Um espaço preparado para proporcionar uma experiência
+                confortável, tranquila e especial em cada atendimento.
+            </p>
+
+        </div>
+
+
+        <div class="beneficios">
+
+            <div class="beneficio">
+                <div class="icone">☀️</div>
+                <h3>Bronze perfeito</h3>
+                <p>Cuide do seu bronze com atenção aos detalhes.</p>
+            </div>
+
+            <div class="beneficio">
+                <div class="icone">✨</div>
+                <h3>Atendimento</h3>
+                <p>Um atendimento pensado para você.</p>
+            </div>
+
+            <div class="beneficio">
+                <div class="icone">🤎</div>
+                <h3>Conforto</h3>
+                <p>Um ambiente agradável para o seu momento.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- AGENDAMENTO -->
+    <main class="container" id="agendamento">
 
         <div class="card">
 
-            <h1>Agende seu horário</h1>
+            <div class="cabecalho-agendamento">
 
-            <p class="subtitulo">
-                Escolha o serviço, a data e o horário
-            </p>
+                <span>📅 AGENDAMENTO</span>
 
+                <h2>Agende seu horário</h2>
 
-            <label>1. Escolha o serviço</label>
+                <p>
+                    Escolha o serviço, a data e o horário
+                </p>
 
-            <select id="servico">
-
-                <option value="Bronzeamento">
-                    Bronzeamento
-                </option>
-
-            </select>
+            </div>
 
 
-            <label>2. Escolha a data</label>
+            <div class="campo">
 
-            <input
-                type="date"
-                id="data"
-                onchange="carregarHorarios()"
+                <label>1. Escolha o serviço</label>
+
+                <select id="servico">
+
+                    <option value="Bronzeamento">
+                        Bronzeamento
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>2. Escolha a data</label>
+
+                <input
+                    type="date"
+                    id="data"
+                    onchange="carregarHorarios()"
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label>3. Escolha o horário</label>
+
+                <select id="horario" disabled>
+
+                    <option value="">
+                        Selecione primeiro a data
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="botao-continuar"
+                onclick="continuar()"
             >
-
-
-            <label>3. Escolha o horário</label>
-
-            <select
-                id="horario"
-                disabled
-            >
-
-                <option value="">
-                    Selecione primeiro a data
-                </option>
-
-            </select>
-
-
-            <button type="button" onclick="continuar()">
                 Continuar
+                <span>→</span>
             </button>
 
 
@@ -81,8 +179,26 @@
     </main>
 
 
+    <!-- RODAPÉ -->
     <footer>
-        © 2026 Mila Bronzeamento. Todos os direitos reservados.
+
+        <div class="footer-logo">
+            MILLA
+            <span>Bronzeamento</span>
+        </div>
+
+        <p>
+            Seu momento de beleza e cuidado.
+        </p>
+
+        <div class="redes">
+            Instagram • WhatsApp
+        </div>
+
+        <small>
+            © 2026 Milla Bronzeamento. Todos os direitos reservados.
+        </small>
+
     </footer>
 
 
