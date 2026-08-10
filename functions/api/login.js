@@ -144,7 +144,22 @@ async function criarAssinatura(valor, segredo) {
 
 
 export async function onRequestPost(context) {
+const autenticado = await validarSessao(
+        context.request,
+        context.env.ADMIN_SESSION_SECRET
+    );
 
+    if (!autenticado) {
+        return Response.json(
+            {
+                sucesso: false,
+                mensagem: "Não autorizado."
+            },
+            {
+                status: 401
+            }
+        );
+    }
     try {
 
         const dados =
