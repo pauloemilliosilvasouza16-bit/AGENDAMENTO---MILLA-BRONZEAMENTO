@@ -152,41 +152,16 @@ export async function onRequestPost(context) {
         const senha = dados.senha;
 
         if (!usuario || !senha) {
-        context.request,
-        context.env.ADMIN_SESSION_SECRET
-    );
-
-    if (!autenticado) {
-        return Response.json(
-            {
-                sucesso: false,
-                mensagem: "Não autorizado."
-            },
-            {
-                status: 401
-            }
-        );
-    }
-    try {
-
-        const dados =
-            await context.request.json();
-
-        const usuario = dados.usuario;
-        const senha = dados.senha;
-
-        if (!usuario || !senha) {
-
-            return Response.json(
-                {
-                    sucesso: false,
-                    mensagem: "Usuário e senha são obrigatórios."
-                },
-                {
-                    status: 400
-                }
-            );
+      return Response.json(
+        {
+            sucesso: false,
+            mensagem: "Usuário e senha são obrigatórios."
+        },
+        {
+            status: 400
         }
+    );
+}
 
         if (
             usuario !== context.env.ADMIN_USER ||
