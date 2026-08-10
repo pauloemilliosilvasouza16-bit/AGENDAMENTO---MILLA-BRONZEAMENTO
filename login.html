@@ -28,7 +28,7 @@
             background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.10);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.10);
         }
 
         .logo {
@@ -158,34 +158,38 @@
 
                 try {
 
-                    const resposta = await fetch("/api/admin");
+                    const resposta = await fetch("/api/login", {
+                        method: "POST",
 
-if (resposta.status === 401) {
-    window.location.href = "/login.html";
-    return;
-}
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
 
-const resultado = await resposta.json();
-
-if (!resposta.ok || !resultado.sucesso) {
-
-    throw new Error(
-        resultado.mensagem || "Erro ao carregar agendamentos."
-    );
-
-}
+                        body: JSON.stringify({
+                            usuario,
+                            senha
+                        })
+                    });
 
                     const resultado =
                         await resposta.json();
 
                     if (!resposta.ok || !resultado.sucesso) {
+
+                        erro.textContent =
+                            resultado.mensagem ||
+                            "Usuário ou senha incorretos.";
+
                         erro.style.display = "block";
+
                         return;
                     }
 
                     window.location.href = "/admin";
 
                 } catch (e) {
+
+                    console.error(e);
 
                     erro.textContent =
                         "Erro ao conectar ao servidor.";
@@ -198,4 +202,5 @@ if (!resposta.ok || !resultado.sucesso) {
     </script>
 
 </body>
+
 </html>
