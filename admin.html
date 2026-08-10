@@ -303,7 +303,50 @@
 
         }
 
+async function cancelarAgendamento(id) {
 
+    const confirmar = confirm(
+        "Tem certeza que deseja cancelar este agendamento?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    try {
+
+        const resposta = await fetch("/api/admin", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: id,
+                status: "cancelado"
+            })
+        });
+
+        const resultado = await resposta.json();
+
+        if (!resposta.ok || !resultado.sucesso) {
+            throw new Error(
+                resultado.mensagem || "Erro ao cancelar agendamento."
+            );
+        }
+
+        alert("Agendamento cancelado com sucesso!");
+
+        carregarAgendamentos();
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert(
+            "Não foi possível cancelar o agendamento."
+        );
+    }
+}
         carregarAgendamentos();
 
     </script>
