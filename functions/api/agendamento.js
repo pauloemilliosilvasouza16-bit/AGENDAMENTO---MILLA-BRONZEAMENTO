@@ -1,5 +1,6 @@
 export async function onRequestPost(context) {
     try {
+
         const dados = await context.request.json();
 
         const {
@@ -12,53 +13,97 @@ export async function onRequestPost(context) {
             pagamento
         } = dados;
 
-        if (!nome || !telefone || !email || !servico || !data || !horario || !pagamento) {
-            return new Response(
-                JSON.stringify({
+
+        /*
+         * VALIDAÇÃO DOS DADOS
+         */
+
+        if (
+            !nome ||
+            !telefone ||
+            !email ||
+            !servico ||
+            !data ||
+            !horario ||
+            !pagamento
+        ) {
+
+            return Response.json(
+                {
                     sucesso: false,
                     mensagem: "Dados incompletos."
-                }),
+                },
                 {
-                    status: 400,
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
+                    status: 400
                 }
             );
         }
 
+
+        /*
+         * LIMITE DE VAGAS
+         */
+
         const vagasMaximas = 5;
+
+
+        /*
+         * CONTA SOMENTE AGENDAMENTOS ATIVOS
+         *
+         * Cancelados NÃO ocupam vaga.
+         */
 
         const resultado = await context.env.DB
             .prepare(`
                 SELECT COUNT(*) AS total
                 FROM agendamentos
-                WHERE data = ? AND horario = ?
+                WHERE data = ?
+                AND horario = ?
+                AND status != 'cancelado'
             `)
             .bind(data, horario)
             .first();
 
-        const totalAgendados = resultado?.total || 0;
+
+        const totalAgendados =
+            Number(resultado?.total || 0);
+
+
+        /*
+         * HORÁRIO LOTADO
+         */
 
         if (totalAgendados >= vagasMaximas) {
-            return new Response(
-                JSON.stringify({
+
+            return Response.json(
+                {
                     sucesso: false,
                     mensagem: "Este horário já está lotado."
-                }),
+                },
                 {
-                    status: 409,
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
+                    status: 409
                 }
             );
         }
 
+
+        /*
+         * CRIA AGENDAMENTO
+         */
+
         await context.env.DB
             .prepare(`
                 INSERT INTO agendamentos
-                (nome, telefone, email, servico, data, horario, pagamento, status)
+                (
+                    nome,
+                    telefone,
+                    email,
+                    servico,
+                    data,
+                    horario,
+                    pagamento,
+                    status
+                )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             `)
             .bind(
@@ -73,31 +118,34 @@ export async function onRequestPost(context) {
             )
             .run();
 
-        return new Response(
-            JSON.stringify({
+
+        /*
+         * SUCESSO
+         */
+
+        return Response.json(
+            {
                 sucesso: true,
                 mensagem: "Agendamento confirmado!"
-            }),
+            },
             {
-                status: 200,
-                headers: {
-                    "Content-Type": "application/json"
-                }
+                status: 200
             }
         );
 
+
     } catch (erro) {
-        return new Response(
-            JSON.stringify({
-                sucesso: false,
-                mensagem: "Erro ao salvar o agendamento.",
-                erro: erro.message
-            }),
+
+        console.error(erro);
+
+
+        return Response.json(
             {
-                status: 500,
-                headers: {
-                    "Content-Type": "application/json"
-                }
+                sucesso: false,
+                mensagem: "Erro ao salvar o agendamento."
+            },
+            {
+                status: 500
             }
         );
     }
