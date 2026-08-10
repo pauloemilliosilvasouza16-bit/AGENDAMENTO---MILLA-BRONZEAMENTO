@@ -48,6 +48,11 @@
             font-weight: bold;
         }
 
+        .status-cancelado {
+            background: #ffe8e8;
+            color: #a33;
+        }
+
         .dados-agendamento {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -70,6 +75,26 @@
         .dado span {
             color: #403333;
             font-size: 15px;
+        }
+
+        .acoes-agendamento {
+            margin-top: 18px;
+        }
+
+        .btn-cancelar {
+            width: 100%;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 10px;
+            background: #a94758;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-cancelar:hover {
+            opacity: 0.9;
         }
 
         .carregando {
@@ -136,7 +161,7 @@
             <div id="listaAgendamentos" class="lista-admin">
 
                 <div class="carregando">
-                    Carregando agendamentos...
+                    Verificando acesso...
                 </div>
 
             </div>
@@ -166,28 +191,58 @@
 
         async function carregarAgendamentos() {
 
-            const lista = document.getElementById("listaAgendamentos");
+            const lista =
+                document.getElementById("listaAgendamentos");
 
             try {
 
-                const resposta = await fetch("/api/admin");
+                const resposta = await fetch(
+                    "/api/admin",
+                    {
+                        method: "GET",
+                        credentials: "same-origin"
+                    }
+                );
 
-                const resultado = await resposta.json();
 
+                /*
+                 * NÃO ESTÁ LOGADO
+                 */
+                if (resposta.status === 401) {
 
-                if (!resposta.ok || !resultado.sucesso) {
+                    window.location.href = "/login.html";
 
-                    throw new Error(
-                        resultado.mensagem || "Erro ao carregar agendamentos."
-                    );
-
+                    return;
                 }
 
 
-                const agendamentos = resultado.agendamentos;
+                const resultado =
+                    await resposta.json();
 
 
-                if (!agendamentos || agendamentos.length === 0) {
+                /*
+                 * OUTRO ERRO DA API
+                 */
+                if (!resposta.ok || !resultado.sucesso) {
+
+                    throw new Error(
+                        resultado.mensagem ||
+                        "Erro ao carregar agendamentos."
+                    );
+                }
+
+
+                const agendamentos =
+                    resultado.agendamentos;
+
+
+                /*
+                 * NENHUM AGENDAMENTO
+                 */
+                if (
+                    !agendamentos ||
+                    agendamentos.length === 0
+                ) {
 
                     lista.innerHTML = `
                         <div class="carregando">
@@ -199,106 +254,148 @@
                 }
 
 
+                /*
+                 * LIMPA A MENSAGEM DE CARREGAMENTO
+                 */
                 lista.innerHTML = "";
 
 
-                agendamentos.forEach(function (agendamento) {
+                /*
+                 * MOSTRA OS AGENDAMENTOS
+                 */
+                agendamentos.forEach(
+                    function (agendamento) {
 
-                    const card = document.createElement("div");
+                        const card =
+                            document.createElement("div");
 
-                    card.className = "agendamento-admin";
-
-
-                    card.innerHTML = `
-
-                        <div class="agendamento-topo">
-
-                            <h3>
-                                ${agendamento.nome || "Cliente"}
-                            </h3>
-
-                            <span class="status">
-                                ${agendamento.status || "Pendente"}
-                            </span>
-
-                        </div>
+                        card.className =
+                            "agendamento-admin";
 
 
-                        <div class="dados-agendamento">
+                        const cancelado =
+                            agendamento.status === "cancelado";
 
-                            <div class="dado">
-                                <strong>DATA</strong>
-                                <span>
-                                    ${agendamento.data || "-"}
+
+                        const classeStatus =
+                            cancelado
+                                ? "status status-cancelado"
+                                : "status";
+
+
+                        card.innerHTML = `
+
+                            <div class="agendamento-topo">
+
+                                <h3>
+                                    ${agendamento.nome || "Cliente"}
+                                </h3>
+
+                                <span class="${classeStatus}">
+                                    ${agendamento.status || "Pendente"}
                                 </span>
+
                             </div>
 
 
-                            <div class="dado">
-                                <strong>HORÁRIO</strong>
-                                <span>
-                                    ${agendamento.horario || "-"}
-                                </span>
+                            <div class="dados-agendamento">
+
+                                <div class="dado">
+                                    <strong>DATA</strong>
+
+                                    <span>
+                                        ${agendamento.data || "-"}
+                                    </span>
+                                </div>
+
+
+                                <div class="dado">
+                                    <strong>HORÁRIO</strong>
+
+                                    <span>
+                                        ${agendamento.horario || "-"}
+                                    </span>
+                                </div>
+
+
+                                <div class="dado">
+                                    <strong>SERVIÇO</strong>
+
+                                    <span>
+                                        ${agendamento.servico || "-"}
+                                    </span>
+                                </div>
+
+
+                                <div class="dado">
+                                    <strong>PAGAMENTO</strong>
+
+                                    <span>
+                                        ${agendamento.pagamento || "-"}
+                                    </span>
+                                </div>
+
+
+                                <div class="dado">
+                                    <strong>TELEFONE</strong>
+
+                                    <span>
+                                        ${agendamento.telefone || "-"}
+                                    </span>
+                                </div>
+
+
+                                <div class="dado">
+                                    <strong>E-MAIL</strong>
+
+                                    <span>
+                                        ${agendamento.email || "-"}
+                                    </span>
+                                </div>
+
                             </div>
-${agendamento.status !== "cancelado" ? `
-    <div class="acoes-agendamento">
-        <button
-            class="btn-cancelar"
-            onclick="cancelarAgendamento(${agendamento.id})">
-            Cancelar agendamento
-        </button>
-    </div>
-` : ""}
-</div>
-
-                            <div class="dado">
-                                <strong>SERVIÇO</strong>
-                                <span>
-                                    ${agendamento.servico || "-"}
-                                </span>
-                            </div>
 
 
-                            <div class="dado">
-                                <strong>PAGAMENTO</strong>
-                                <span>
-                                    ${agendamento.pagamento || "-"}
-                                </span>
-                            </div>
+                            ${
+                                !cancelado
+                                ? `
+                                    <div class="acoes-agendamento">
+
+                                        <button
+                                            class="btn-cancelar"
+                                            onclick="cancelarAgendamento(${agendamento.id})"
+                                        >
+                                            Cancelar agendamento
+                                        </button>
+
+                                    </div>
+                                `
+                                : ""
+                            }
+
+                        `;
 
 
-                            <div class="dado">
-                                <strong>TELEFONE</strong>
-                                <span>
-                                    ${agendamento.telefone || "-"}
-                                </span>
-                            </div>
+                        lista.appendChild(card);
 
+                    }
+                );
 
-                            <div class="dado">
-                                <strong>E-MAIL</strong>
-                                <span>
-                                    ${agendamento.email || "-"}
-                                </span>
-                            </div>
-
-                        </div>
-                    `;
-
-
-                    lista.appendChild(card);
-
-                });
 
             } catch (erro) {
 
                 console.error(erro);
 
+
                 lista.innerHTML = `
                     <div class="erro-admin">
+
                         Não foi possível carregar os agendamentos.
+
                         <br><br>
+
                         Tente atualizar a página.
+
                     </div>
                 `;
 
@@ -306,50 +403,105 @@ ${agendamento.status !== "cancelado" ? `
 
         }
 
-async function cancelarAgendamento(id) {
 
-    const confirmar = confirm(
-        "Tem certeza que deseja cancelar este agendamento?"
-    );
+        /*
+         * CANCELAR AGENDAMENTO
+         */
+        async function cancelarAgendamento(id) {
 
-    if (!confirmar) {
-        return;
-    }
+            const confirmar =
+                confirm(
+                    "Tem certeza que deseja cancelar este agendamento?"
+                );
 
-    try {
 
-        const resposta = await fetch("/api/admin", {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                id: id,
-                status: "cancelado"
-            })
-        });
+            if (!confirmar) {
 
-        const resultado = await resposta.json();
+                return;
 
-        if (!resposta.ok || !resultado.sucesso) {
-            throw new Error(
-                resultado.mensagem || "Erro ao cancelar agendamento."
-            );
+            }
+
+
+            try {
+
+                const resposta =
+                    await fetch(
+                        "/api/admin",
+                        {
+                            method: "PATCH",
+
+                            credentials: "same-origin",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                id: id,
+                                status: "cancelado"
+                            })
+                        }
+                    );
+
+
+                /*
+                 * SESSÃO EXPIRADA
+                 */
+                if (resposta.status === 401) {
+
+                    window.location.href =
+                        "/login.html";
+
+                    return;
+                }
+
+
+                const resultado =
+                    await resposta.json();
+
+
+                if (
+                    !resposta.ok ||
+                    !resultado.sucesso
+                ) {
+
+                    throw new Error(
+                        resultado.mensagem ||
+                        "Erro ao cancelar agendamento."
+                    );
+
+                }
+
+
+                alert(
+                    "Agendamento cancelado com sucesso!"
+                );
+
+
+                /*
+                 * ATUALIZA A LISTA
+                 */
+                carregarAgendamentos();
+
+
+            } catch (erro) {
+
+                console.error(erro);
+
+
+                alert(
+                    "Não foi possível cancelar o agendamento."
+                );
+
+            }
+
         }
 
-        alert("Agendamento cancelado com sucesso!");
 
-        carregarAgendamentos();
-
-    } catch (erro) {
-
-        console.error(erro);
-
-        alert(
-            "Não foi possível cancelar o agendamento."
-        );
-    }
-}
+        /*
+         * INICIA O PAINEL
+         */
         carregarAgendamentos();
 
     </script>
