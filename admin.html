@@ -165,6 +165,86 @@
         }
 
         /* =========================
+           FILTROS DA AGENDA
+        ========================= */
+
+        .filtros-agenda {
+            background: white;
+            border: 1px solid #f2e1dd;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(80, 40, 40, 0.05);
+        }
+
+        .filtros-titulo {
+            color: #3b2929;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .filtros-botoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filtro-btn {
+            border: 1px solid #ead8d4;
+            background: #fff9f7;
+            color: #806f6f;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .filtro-btn:hover {
+            background: #f8e9e5;
+        }
+
+        .filtro-btn.ativo {
+            background: #a94758;
+            border-color: #a94758;
+            color: white;
+        }
+
+        .pesquisa-agenda {
+            margin-top: 15px;
+        }
+
+        .pesquisa-agenda label {
+            display: block;
+            color: #4a3838;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .pesquisa-agenda input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #e4d3cf;
+            border-radius: 11px;
+            font-size: 14px;
+            background: #fff;
+            outline: none;
+        }
+
+        .pesquisa-agenda input:focus {
+            border-color: #a94758;
+        }
+
+        .resultado-filtro {
+            margin-top: 12px;
+            color: #806f6f;
+            font-size: 12px;
+        }
+
+        /* =========================
            AGENDA
         ========================= */
 
@@ -640,6 +720,15 @@
             .aba-admin {
                 white-space: nowrap;
             }
+
+            .filtros-botoes {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filtro-btn {
+                width: 100%;
+            }
         }
 
         @media (max-width: 420px) {
@@ -654,6 +743,10 @@
 
             .acoes-form {
                 flex-direction: column;
+            }
+
+            .filtros-botoes {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -682,9 +775,7 @@
 <main class="container">
 
 
-    <!-- =========================
-         CABEÇALHO
-    ========================= -->
+    <!-- CABEÇALHO -->
 
     <div class="admin-topo">
 
@@ -696,7 +787,6 @@
 
         </div>
 
-
         <div
             class="admin-data"
             id="dataAtual"
@@ -707,9 +797,7 @@
     </div>
 
 
-    <!-- =========================
-         ABAS
-    ========================= -->
+    <!-- ABAS -->
 
     <div class="abas-admin">
 
@@ -720,7 +808,6 @@
         >
             📋 Agenda
         </button>
-
 
         <button
             class="aba-admin"
@@ -734,7 +821,7 @@
 
 
     <!-- =========================
-         ABA AGENDA
+         AGENDA
     ========================= -->
 
     <section
@@ -744,7 +831,6 @@
 
 
         <div class="resumo-admin">
-
 
             <div class="resumo-card">
 
@@ -829,6 +915,84 @@
         </div>
 
 
+        <!-- =========================
+             FILTROS
+        ========================= -->
+
+        <div class="filtros-agenda">
+
+            <div class="filtros-titulo">
+                Filtrar agenda
+            </div>
+
+
+            <div class="filtros-botoes">
+
+                <button
+                    class="filtro-btn ativo"
+                    id="filtroHoje"
+                    onclick="alterarFiltroAgenda('hoje')"
+                >
+                    Hoje
+                </button>
+
+
+                <button
+                    class="filtro-btn"
+                    id="filtroAmanha"
+                    onclick="alterarFiltroAgenda('amanha')"
+                >
+                    Amanhã
+                </button>
+
+
+                <button
+                    class="filtro-btn"
+                    id="filtroProximos"
+                    onclick="alterarFiltroAgenda('proximos')"
+                >
+                    Próximos dias
+                </button>
+
+
+                <button
+                    class="filtro-btn"
+                    id="filtroTodos"
+                    onclick="alterarFiltroAgenda('todos')"
+                >
+                    Todos
+                </button>
+
+            </div>
+
+
+            <div class="pesquisa-agenda">
+
+                <label for="pesquisaCliente">
+                    Pesquisar cliente
+                </label>
+
+                <input
+                    type="search"
+                    id="pesquisaCliente"
+                    placeholder="Digite o nome ou telefone..."
+                    autocomplete="off"
+                    oninput="aplicarFiltrosAgenda()"
+                >
+
+            </div>
+
+
+            <div
+                id="resultadoFiltro"
+                class="resultado-filtro"
+            >
+                Mostrando os agendamentos de hoje.
+            </div>
+
+        </div>
+
+
         <div id="listaAgendamentos">
 
             <div class="carregando">
@@ -842,14 +1006,13 @@
 
 
     <!-- =========================
-         ABA DISPONIBILIDADE
+         DISPONIBILIDADE
     ========================= -->
 
     <section
         id="conteudoDisponibilidade"
         class="conteudo-aba"
     >
-
 
         <div class="disponibilidade-box">
 
@@ -867,7 +1030,6 @@
                 <label for="dataDisponibilidade">
                     Escolha a data
                 </label>
-
 
                 <input
                     type="date"
@@ -890,9 +1052,7 @@
             </div>
 
 
-            <!-- =========================
-                 FORMULÁRIO MANUAL
-            ========================= -->
+            <!-- FORMULÁRIO MANUAL -->
 
             <div
                 id="formularioManual"
@@ -912,7 +1072,6 @@
                     id="formManual"
                     onsubmit="salvarAgendamentoManual(event)"
                 >
-
 
                     <div class="form-grid">
 
@@ -1084,7 +1243,6 @@
 
         </div>
 
-
     </section>
 
 
@@ -1109,8 +1267,15 @@
 </footer>
 
 
-
 <script>
+
+/* =========================================
+   VARIÁVEIS DA AGENDA
+========================================= */
+
+let todosAgendamentos = [];
+
+let filtroAgendaAtual = "hoje";
 
 
 /* =========================================
@@ -1130,9 +1295,8 @@ document.getElementById(
 );
 
 
-
 /* =========================================
-   DATA HOJE
+   DATA HOJE ISO
 ========================================= */
 
 function dataHojeISO() {
@@ -1156,6 +1320,34 @@ function dataHojeISO() {
 }
 
 
+/* =========================================
+   DATA AMANHÃ ISO
+========================================= */
+
+function dataAmanhaISO() {
+
+    const amanha = new Date();
+
+    amanha.setDate(
+        amanha.getDate() + 1
+    );
+
+    const ano =
+        amanha.getFullYear();
+
+    const mes =
+        String(
+            amanha.getMonth() + 1
+        ).padStart(2, "0");
+
+    const dia =
+        String(
+            amanha.getDate()
+        ).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}`;
+}
+
 
 /* =========================================
    FORMATAR DATA
@@ -1178,9 +1370,8 @@ function formatarData(data) {
 }
 
 
-
 /* =========================================
-   INICIALIZA DATA
+   DATA DISPONIBILIDADE
 ========================================= */
 
 document.getElementById(
@@ -1188,9 +1379,8 @@ document.getElementById(
 ).value = dataHojeISO();
 
 
-
 /* =========================================
-   INICIA ABA
+   ABAS
 ========================================= */
 
 function mostrarAba(aba) {
@@ -1253,13 +1443,11 @@ function mostrarAba(aba) {
             "ativa"
         );
 
-
         consultarDisponibilidade();
 
     }
 
 }
-
 
 
 /* =========================================
@@ -1353,6 +1541,265 @@ function atualizarResumo(
 }
 
 
+/* =========================================
+   ALTERAR FILTRO
+========================================= */
+
+function alterarFiltroAgenda(
+    filtro
+) {
+
+    filtroAgendaAtual =
+        filtro;
+
+
+    document.querySelectorAll(
+        ".filtro-btn"
+    ).forEach(
+        function(botao) {
+
+            botao.classList.remove(
+                "ativo"
+            );
+
+        }
+    );
+
+
+    const botoes = {
+
+        hoje: "filtroHoje",
+
+        amanha: "filtroAmanha",
+
+        proximos: "filtroProximos",
+
+        todos: "filtroTodos"
+
+    };
+
+
+    const botao =
+        document.getElementById(
+            botoes[filtro]
+        );
+
+
+    if (botao) {
+
+        botao.classList.add(
+            "ativo"
+        );
+
+    }
+
+
+    aplicarFiltrosAgenda();
+}
+
+
+/* =========================================
+   APLICAR FILTROS
+========================================= */
+
+function aplicarFiltrosAgenda() {
+
+    let filtrados =
+        [...todosAgendamentos];
+
+
+    const hoje =
+        dataHojeISO();
+
+
+    const amanha =
+        dataAmanhaISO();
+
+
+    /* FILTRO DE DATA */
+
+    if (filtroAgendaAtual === "hoje") {
+
+        filtrados =
+            filtrados.filter(
+                function(item) {
+
+                    return item.data === hoje;
+
+                }
+            );
+
+    }
+
+
+    else if (
+        filtroAgendaAtual === "amanha"
+    ) {
+
+        filtrados =
+            filtrados.filter(
+                function(item) {
+
+                    return item.data === amanha;
+
+                }
+            );
+
+    }
+
+
+    else if (
+        filtroAgendaAtual === "proximos"
+    ) {
+
+        filtrados =
+            filtrados.filter(
+                function(item) {
+
+                    return (
+                        item.data &&
+                        item.data > amanha
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* PESQUISA */
+
+    const campoPesquisa =
+        document.getElementById(
+            "pesquisaCliente"
+        );
+
+
+    const pesquisa =
+        (
+            campoPesquisa?.value ||
+            ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (pesquisa) {
+
+        filtrados =
+            filtrados.filter(
+                function(item) {
+
+                    const nome =
+                        String(
+                            item.nome || ""
+                        ).toLowerCase();
+
+
+                    const telefone =
+                        String(
+                            item.telefone || ""
+                        )
+                        .toLowerCase();
+
+
+                    return (
+                        nome.includes(
+                            pesquisa
+                        ) ||
+                        telefone.includes(
+                            pesquisa
+                        )
+                    );
+
+                }
+            );
+
+    }
+
+
+    atualizarTextoFiltro(
+        filtrados.length
+    );
+
+
+    mostrarAgendamentos(
+        filtrados
+    );
+
+}
+
+
+/* =========================================
+   TEXTO DO FILTRO
+========================================= */
+
+function atualizarTextoFiltro(
+    quantidade
+) {
+
+    const elemento =
+        document.getElementById(
+            "resultadoFiltro"
+        );
+
+
+    let descricao;
+
+
+    if (
+        filtroAgendaAtual === "hoje"
+    ) {
+
+        descricao = "hoje";
+
+    }
+
+    else if (
+        filtroAgendaAtual === "amanha"
+    ) {
+
+        descricao = "amanhã";
+
+    }
+
+    else if (
+        filtroAgendaAtual === "proximos"
+    ) {
+
+        descricao = "dos próximos dias";
+
+    }
+
+    else {
+
+        descricao = "todos";
+
+    }
+
+
+    const pesquisa =
+        document.getElementById(
+            "pesquisaCliente"
+        ).value.trim();
+
+
+    if (pesquisa) {
+
+        elemento.textContent =
+            `${quantidade} resultado(s) para "${pesquisa}".`;
+
+    }
+
+    else {
+
+        elemento.textContent =
+            `Mostrando ${quantidade} agendamento(s) ${descricao}.`;
+
+    }
+
+}
+
 
 /* =========================================
    INICIAL
@@ -1369,7 +1816,6 @@ function nomeInicial(nome) {
         .charAt(0)
         .toUpperCase();
 }
-
 
 
 /* =========================================
@@ -1414,9 +1860,11 @@ function criarCardAgendamento(
             <div class="cliente-info">
 
                 <div class="cliente-icone">
+
                     ${nomeInicial(
                         agendamento.nome
                     )}
+
                 </div>
 
                 <div>
@@ -1442,6 +1890,21 @@ function criarCardAgendamento(
 
 
         <div class="dados-agendamento">
+
+            <div class="dado">
+
+                <strong>
+                    DATA
+                </strong>
+
+                <span>
+                    ${formatarData(
+                        agendamento.data
+                    )}
+                </span>
+
+            </div>
+
 
             <div class="dado">
 
@@ -1481,18 +1944,21 @@ function criarCardAgendamento(
 
             </div>
 
+        </div>
 
-            <div class="dado">
 
-                <strong>
-                    E-MAIL
-                </strong>
+        <div
+            class="dado"
+            style="margin-top:10px;"
+        >
 
-                <span>
-                    ${agendamento.email || "-"}
-                </span>
+            <strong>
+                E-MAIL
+            </strong>
 
-            </div>
+            <span>
+                ${agendamento.email || "-"}
+            </span>
 
         </div>
 
@@ -1523,7 +1989,6 @@ function criarCardAgendamento(
 }
 
 
-
 /* =========================================
    MOSTRAR AGENDAMENTOS
 ========================================= */
@@ -1551,7 +2016,7 @@ function mostrarAgendamentos(
                     Nenhum agendamento encontrado
                 </strong>
 
-                Não existem atendimentos registrados.
+                Não existem atendimentos para este filtro.
 
             </div>
 
@@ -1590,7 +2055,9 @@ function mostrarAgendamentos(
 
 
             if (!grupos[data]) {
+
                 grupos[data] = [];
+
             }
 
 
@@ -1686,7 +2153,6 @@ function mostrarAgendamentos(
 }
 
 
-
 /* =========================================
    CARREGAR AGENDA
 ========================================= */
@@ -1739,19 +2205,16 @@ async function carregarAgendamentos() {
         }
 
 
-        const agendamentos =
-            resultado.agendamentos ||
-            [];
+        todosAgendamentos =
+            resultado.agendamentos || [];
 
 
         atualizarResumo(
-            agendamentos
+            todosAgendamentos
         );
 
 
-        mostrarAgendamentos(
-            agendamentos
-        );
+        aplicarFiltrosAgenda();
 
 
     } catch (erro) {
@@ -1776,7 +2239,6 @@ async function carregarAgendamentos() {
     }
 
 }
-
 
 
 /* =========================================
@@ -1857,11 +2319,6 @@ async function cancelarAgendamento(
         await carregarAgendamentos();
 
 
-        /*
-         * Se a aba de disponibilidade
-         * estiver aberta, atualiza também.
-         */
-
         const disponibilidade =
             document.getElementById(
                 "conteudoDisponibilidade"
@@ -1891,7 +2348,6 @@ async function cancelarAgendamento(
     }
 
 }
-
 
 
 /* =========================================
@@ -1979,18 +2435,6 @@ async function consultarDisponibilidade() {
         }
 
 
-        /*
-         * Aceita o novo formato:
-         *
-         * {
-         *   sucesso: true,
-         *   horarios: [...]
-         * }
-         *
-         * e também o formato antigo
-         * caso ainda esteja em cache.
-         */
-
         const horarios =
             Array.isArray(resultado)
                 ? resultado
@@ -2029,7 +2473,6 @@ async function consultarDisponibilidade() {
     }
 
 }
-
 
 
 /* =========================================
@@ -2101,7 +2544,9 @@ function mostrarHorarios(
                 classe =
                     "lotado";
 
-            } else if (vagas <= 2) {
+            }
+
+            else if (vagas <= 2) {
 
                 classe =
                     "quase-lotado";
@@ -2132,7 +2577,9 @@ function mostrarHorarios(
                     `<strong>0 vagas disponíveis</strong><br>
                      Horário lotado`;
 
-            } else {
+            }
+
+            else {
 
                 textoVagas =
                     `<strong>${vagas} ${
@@ -2193,7 +2640,6 @@ function mostrarHorarios(
         }
     );
 }
-
 
 
 /* =========================================
@@ -2272,7 +2718,6 @@ function abrirFormularioManual(
 }
 
 
-
 /* =========================================
    FECHAR FORMULÁRIO
 ========================================= */
@@ -2317,7 +2762,6 @@ function fecharFormularioManual() {
         "mensagem-form";
 
 }
-
 
 
 /* =========================================
@@ -2512,23 +2956,11 @@ async function salvarAgendamentoManual(
             horario;
 
 
-        /*
-         * Atualiza a agenda.
-         */
-
         await carregarAgendamentos();
 
 
-        /*
-         * Atualiza as vagas.
-         */
-
         await consultarDisponibilidade();
 
-
-        /*
-         * Mantém a mensagem visível.
-         */
 
         document.getElementById(
             "mensagemManual"
@@ -2556,7 +2988,6 @@ async function salvarAgendamentoManual(
     }
 
 }
-
 
 
 /* =========================================
